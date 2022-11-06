@@ -215,10 +215,11 @@ extension UIView {
     
     
     var elementViewController: UIViewController? {
-        let responder = self
-        while (responder.next != nil) {
-            if responder.isKind(of: UIViewController.self) == true {
-                return responder as! UIViewController
+        for view in sequence(first: self.superview, next: {$0?.superview}){
+            if let responder = view?.next{
+                if responder.isKind(of: UIViewController.self){
+                    return responder as? UIViewController
+                }
             }
         }
         return nil

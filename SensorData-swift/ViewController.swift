@@ -97,7 +97,7 @@ extension ViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("didSelectRowAt")
         let cell = tableView.cellForRow(at: indexPath)
-        print("cell.elementType:" + cell!.elementType as String + "---cell.elementContent:", cell?.elementContent as Any)
+        print("cell.elementType:" + cell!.elementType as String + "---cell.elementContent:", cell?.elementContent as Any, cell?.elementViewController as Any)
     }
 }
 
