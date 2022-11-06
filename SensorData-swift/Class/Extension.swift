@@ -14,7 +14,6 @@ extension UIApplication {
     class func swizzleMethod() {
         swizzleInstanceMethod(UIApplication.self, from: #selector(sendAction(_:to:from:for:)), to: #selector(sensorData_sendAction(_:to:from:for:)))
 
-        UIViewController.swizzleMethod()
         UITableView.swizzleMethod()
         UICollectionView.swizzleMethod()
         UILongPressGestureRecognizer.swizzleMethod()
@@ -166,7 +165,12 @@ extension UITapGestureRecognizer {
 }
 
 
-extension UIViewController {
+extension UIViewController: NSSwiftyLoadProtocol {
+    
+    public static func swiftyLoad() {
+        UIViewController.swizzleMethod()
+    }
+
     class func swizzleMethod() {
         let originalSel = #selector(UIViewController.viewWillAppear(_:))
         let destinationSel = #selector(sensorData_viewWillAppear(_:))
@@ -175,6 +179,49 @@ extension UIViewController {
     
     @objc func sensorData_viewWillAppear(_ animated: Bool) {
         print("sensorData_viewWillAppear")
+    }
+}
+
+
+extension UIView {
+
+    var elementType: String {
+        return NSStringFromClass(type(of: self))
+    }
+    
+    var elementContent: String? {
+        if self.isHidden == true || self.alpha == 0 {
+            return nil
+        }
+        
+        if self.isKind(of: UIButton.self) {
+            return (self as! UIButton).titleLabel?.text
+        } else if self.isKind(of: UISwitch.self) {
+            return (self as! UISwitch).isOn ? "checked" : "unchecked"
+        } else if self.isKind(of: UILabel.self) {
+            return (self as! UILabel).text
+        }
+        let contents = NSMutableArray()
+        for view in self.subviews {
+                let content = view.elementContent
+                if content?.isKind(of: NSString.self) == true {
+                    if content!.count > 0 {
+                        contents.add(content! as NSString)
+                    }
+                }
+        }
+        return contents.count == 0 ? nil : contents.componentsJoined(by: "-")
+    }
+    
+    
+    var elementViewController: UIViewController? {
+        let responder = self
+        while (responder.next != nil) {
+            if responder.isKind(of: UIViewController.self) == true {
+                return responder as! UIViewController
+            }
+        }
+        return nil
     }
 }
 

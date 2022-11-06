@@ -22,23 +22,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
 
-//        let table = UITableView(frame: view.bounds, style: .plain)
-//        table.delegate = self
-//        table.dataSource = self
-//        view.addSubview(table)
-//        table.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
+        let table = UITableView(frame: view.bounds, style: .plain)
+        table.delegate = self
+        table.dataSource = self
+        view.addSubview(table)
+        table.register(UITableViewCell.self, forCellReuseIdentifier: "cellId")
         
         
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: view.bounds.size.width, height: 100)
-    
-        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cellId")
-        view.addSubview(collectionView)
+//        let layout = UICollectionViewFlowLayout()
+//        layout.itemSize = CGSize(width: view.bounds.size.width, height: 100)
+//    
+//        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+//        collectionView.delegate = self
+//        collectionView.dataSource = self
+//        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cellId")
+//        view.addSubview(collectionView)
         
-        NSObject.load()
+//        NSObject.load()
         
 //        let longGes = UILongPressGestureRecognizer(target: self, action: #selector(longGesAction(_:)))
 //        view.addGestureRecognizer(longGes)
@@ -48,13 +48,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
    
-//    override func viewWillAppear(_ animated: Bool) {
-//        print("viewWillAppear")
-////        viewWillAppear(animated)
-//    }
-//    override func viewDidAppear(_ animated: Bool) {
-//        print("viewDidAppear")
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("viewWillAppear")
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("viewDidAppear")
+    }
     
     @objc func longGesAction(_ ges: UILongPressGestureRecognizer) {
         print("longGesAction")
@@ -85,6 +86,7 @@ extension ViewController {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId")
+        cell?.textLabel?.text = String().appendingFormat("indexRow:-%d", indexPath.row)
         let btn = UIButton(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
         btn.backgroundColor = .brown
         cell?.contentView.addSubview(btn)
@@ -94,8 +96,9 @@ extension ViewController {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("didSelectRowAt")
+        let cell = tableView.cellForRow(at: indexPath)
+        print("cell.elementType:" + cell!.elementType as String + "---cell.elementContent:", cell?.elementContent as Any)
     }
-
 }
 
 
